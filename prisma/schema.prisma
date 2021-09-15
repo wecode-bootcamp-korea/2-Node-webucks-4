@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Categories {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  Products Products[]
+  @@map("categories")
+}
+
+model Products {
+  id          Int        @id @default(autoincrement())
+  koreanName  String
+  englishName String
+  categoryId  Int        @map("category_id")
+  Categories  Categories @relation(fields: [categoryId], references: [id])
+
+  Images           Images[]
+  ProductAllergies ProductAllergies[]
+  Nutritions       Nutritions[]
+  @@map("products")
+}
+
+model Images {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String   @map("image_url")
+  productId Int      @map("product_id")
+  Products  Products @relation(fields: [productId], references: [id])
+
+  @@map("images")
+}
+
+model Allergies {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  ProductAllergies ProductAllergies[]
+  @@map("allergies")
+}
+
+model ProductAllergies {
+  id        Int       @id @default(autoincrement())
+  productId Int       @map("product_id")
+  allergyId Int       @map("allergy_id")
+  Products  Products  @relation(fields: [productId], references: [id])
+  Allergies Allergies @relation(fields: [allergyId], references: [id])
+
+  @@map("products_allergies")
+}
+
+model Nutritions {
+  id        Int      @id @default(autoincrement())
+  name      String
+  productId Int      @map("product_id")
+  amount    Float
+  Products  Products @relation(fields: [productId], references: [id])
+
+  @@map("nutritions")
+}
+
+model Users {
+  id           Int     @id @default(autoincrement())
+  email        String  @unique
+  password     String
+  username     String?
+  address      String?
+  phoneNumber  String? @map("phone_number")
+  policyAgreed Boolean @default(true) @map("policy_agreed")
+
+  @@map("users")
+}
