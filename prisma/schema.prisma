@@ -25,6 +25,7 @@ model Products{
   categoryId Int @map("category_id")
   category Categories @relation(fields: [categoryId], references: [id])
   image Images?
+  nutrition Nutritions[]
   productAllergy ProductAllergies[]
   
   @@map("products")
@@ -35,6 +36,8 @@ model Images{
   imageUrl String @map("image_url")
   productId Int @map("product_id")
   product Products @relation(fields: [productId], references:[id])
+
+  @@map("images")
 }
 
 
@@ -43,6 +46,7 @@ model Allergies{
   name String @map("name")
   ProductAllergy ProductAllergies[]
 
+  @@map("allergies")
 }
 
 model ProductAllergies{
@@ -58,8 +62,9 @@ model ProductAllergies{
 model Nutritions{
   id Int @id @default(autoincrement())
   name String
+  amount String
   productId Int @map("product_id")
-  amount Int
+  product Products @relation(fields: [productId], references:[id])
 
   @@map("nutritions")
 }
@@ -69,10 +74,10 @@ model Users{
   id Int @id @default(autoincrement())
   email String @unique
   password String 
-  username String?
-  address String?
-  phoneNumber String?
-  policyAgreed Boolean @default(true)
+  userName String? @map("user_name")
+  address String? 
+  phoneNumber String? @map("phone_number")
+  policyAgreed Boolean @default(true) @map("policy_agreed")
 
   @@map("users")
 }
