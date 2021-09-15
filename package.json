@@ -20,6 +20,9 @@
     "@babel/node": "^7.15.4",
     "@babel/preset-env": "^7.15.6",
     "dotenv": "^10.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.4.0",
     "prisma": "^3.0.2"
   }
 }

@@ -6,24 +6,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
 model Categories {
-  id   Int    @id @default(autoincrement())
-  name String
+  id       Int    @id @default(autoincrement())
+  category String @map("name")
 
   Products Products[]
+
   @@map("categories")
 }
 
 model Products {
   id          Int        @id @default(autoincrement())
-  koreanName  String
-  englishName String
+  koreanName  String     @map("korean_name")
+  englishName String     @map("english_name")
   categoryId  Int        @map("category_id")
   Categories  Categories @relation(fields: [categoryId], references: [id])
 
   Images           Images[]
   ProductAllergies ProductAllergies[]
   Nutritions       Nutritions[]
+
+  ProductDescriptions ProductDescriptions[]
   @@map("products")
 }
 
@@ -74,4 +81,13 @@ model Users {
   policyAgreed Boolean @default(true) @map("policy_agreed")
 
   @@map("users")
+}
+
+model ProductDescriptions {
+  id          Int      @id @default(autoincrement())
+  description String
+  productId   Int      @map("product_id")
+  Products    Products @relation(fields: [productId], references: [id])
+
+  @@map("product_descriptions")
 }
