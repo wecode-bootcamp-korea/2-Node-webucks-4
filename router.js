@@ -16,7 +16,7 @@ router.get("/", (req, res) => {
 router.get("/products/category", async (req, res) => {
   try {
     // const categories = await prisma.$queryRaw`SELECT * FROM categories;`;
-    const categories = await prisma.categories.findMany();
+    const categories = await prisma.category.findMany();
     res.status(200).json({ data: categories });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -33,14 +33,14 @@ router.get("/products", async (req, res) => {
       //   LEFT JOIN images AS i
       //   ON p.id = i.product_id;`;
 
-      await prisma.products.findMany({
+      await prisma.product.findMany({
         include: {
-          Categories: {
+          Category: {
             select: {
               category: true,
             },
           },
-          Images: {
+          Image: {
             select: {
               imageUrl: true,
             },
@@ -88,7 +88,7 @@ router.get("/products/:id", async (req, res) => {
     //     caffeine: `${nutritionInfo[5] == null ? 0 : nutritionInfo[5].amount}mg`,
     //   },
     // };
-    const data = await prisma.products.findUnique({
+    const data = await prisma.product.findUnique({
       where: {
         id: +id,
       },
@@ -96,12 +96,12 @@ router.get("/products/:id", async (req, res) => {
         id: true,
         koreanName: true,
         englishName: true,
-        ProductDescriptions: {
+        ProductDescription: {
           select: {
             description: true,
           },
         },
-        Images: {
+        Image: {
           select: {
             imageUrl: true,
           },
@@ -109,12 +109,12 @@ router.get("/products/:id", async (req, res) => {
       },
     });
 
-    const allergens = await prisma.productAllergies.findMany({
+    const allergens = await prisma.productAllergy.findMany({
       where: {
         productId: +id,
       },
       include: {
-        Allergies: {
+        Allergy: {
           select: {
             name: true,
           },
@@ -122,7 +122,7 @@ router.get("/products/:id", async (req, res) => {
       },
     });
 
-    const nutritionInfo = await prisma.nutritions.findMany({
+    const nutritionInfo = await prisma.nutrition.findMany({
       where: {
         productId: +id,
       },

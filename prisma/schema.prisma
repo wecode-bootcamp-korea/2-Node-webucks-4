@@ -10,68 +10,68 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Categories {
+model Category {
   id       Int    @id @default(autoincrement())
   category String @map("name")
 
-  Products Products[]
+  Product Product[]
 
   @@map("categories")
 }
 
-model Products {
-  id          Int        @id @default(autoincrement())
-  koreanName  String     @map("korean_name")
-  englishName String     @map("english_name")
-  categoryId  Int        @map("category_id")
-  Categories  Categories @relation(fields: [categoryId], references: [id])
+model Product {
+  id          Int      @id @default(autoincrement())
+  koreanName  String   @map("korean_name")
+  englishName String   @map("english_name")
+  categoryId  Int      @map("category_id")
+  Category    Category @relation(fields: [categoryId], references: [id])
 
-  Images           Images[]
-  ProductAllergies ProductAllergies[]
-  Nutritions       Nutritions[]
+  Image          Image[]
+  ProductAllergy ProductAllergy[]
+  Nutrition      Nutrition[]
 
-  ProductDescriptions ProductDescriptions[]
+  ProductDescription ProductDescription[]
   @@map("products")
 }
 
-model Images {
-  id        Int      @id @default(autoincrement())
-  imageUrl  String   @map("image_url")
-  productId Int      @map("product_id")
-  Products  Products @relation(fields: [productId], references: [id])
+model Image {
+  id        Int     @id @default(autoincrement())
+  imageUrl  String  @map("image_url")
+  productId Int     @map("product_id")
+  Product   Product @relation(fields: [productId], references: [id])
 
   @@map("images")
 }
 
-model Allergies {
+model Allergy {
   id   Int    @id @default(autoincrement())
   name String
 
-  ProductAllergies ProductAllergies[]
+  ProductAllergy ProductAllergy[]
   @@map("allergies")
 }
 
-model ProductAllergies {
-  id        Int       @id @default(autoincrement())
-  productId Int       @map("product_id")
-  allergyId Int       @map("allergy_id")
-  Products  Products  @relation(fields: [productId], references: [id])
-  Allergies Allergies @relation(fields: [allergyId], references: [id])
+model ProductAllergy {
+  id        Int     @id @default(autoincrement())
+  productId Int     @map("product_id")
+  allergyId Int     @map("allergy_id")
+  Product   Product @relation(fields: [productId], references: [id])
+  Allergy   Allergy @relation(fields: [allergyId], references: [id])
 
   @@map("products_allergies")
 }
 
-model Nutritions {
-  id        Int      @id @default(autoincrement())
+model Nutrition {
+  id        Int     @id @default(autoincrement())
   name      String
-  productId Int      @map("product_id")
+  productId Int     @map("product_id")
   amount    Float
-  Products  Products @relation(fields: [productId], references: [id])
+  Product   Product @relation(fields: [productId], references: [id])
 
   @@map("nutritions")
 }
 
-model Users {
+model User {
   id           Int     @id @default(autoincrement())
   email        String  @unique
   password     String
@@ -83,11 +83,11 @@ model Users {
   @@map("users")
 }
 
-model ProductDescriptions {
-  id          Int      @id @default(autoincrement())
+model ProductDescription {
+  id          Int     @id @default(autoincrement())
   description String
-  productId   Int      @map("product_id")
-  Products    Products @relation(fields: [productId], references: [id])
+  productId   Int     @map("product_id")
+  Product     Product @relation(fields: [productId], references: [id])
 
   @@map("product_descriptions")
 }
