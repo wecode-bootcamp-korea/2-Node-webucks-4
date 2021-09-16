@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Category {
+  id      Int       @id @default(autoincrement())
+  name    String    @db.VarChar(100)
+  Product Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id             Int              @id @default(autoincrement())
+  koreanName     String           @map("korean_name") @db.VarChar(100)
+  englishName    String           @map("english_name") @db.VarChar(100)
+  categoryId     Int              @map("category_id")
+  category       Category         @relation(fields: [categoryId], references: [id])
+  Image          Image[]
+  ProductAllergy ProductAllergy[]
+  Nutrition      Nutrition[]
+
+  @@map("products")
+}
+
+model Image {
+  id        Int     @id @default(autoincrement())
+  imageUrl  String  @map("image_url") @db.VarChar(2083)
+  productId Int     @map("product_id")
+  Product   Product @relation(fields: [productId], references: [id])
+
+  @@map("images")
+}
+
+model Allergy {
+  id             Int              @id @default(autoincrement())
+  name           String           @db.VarChar(20)
+  ProductAllergy ProductAllergy[]
+
+  @@map("allergies")
+}
+
+model ProductAllergy {
+  id        Int     @id @default(autoincrement())
+  productId Int     @map("product_id")
+  allergyId Int     @map("allergy_id")
+  Product   Product @relation(fields: [productId], references: [id])
+  Allergy   Allergy @relation(fields: [allergyId], references: [id])
+
+  @@map("products_allergies")
+}
+
+model Nutrition {
+  id        Int     @id @default(autoincrement())
+  kcal      Float   @db.Double
+  fat       Float   @db.Double
+  protein   Float   @db.Double
+  sodium    Float   @db.Double
+  sugar     Float   @db.Double
+  caffeine  Float   @db.Double
+  productId Int     @map("product_id")
+  Product   Product @relation(fields: [productId], references: [id])
+
+  @@map("nutritions")
+}
+
+model User {
+  id           Int     @id @default(autoincrement())
+  email        String  @unique @db.VarChar(100)
+  password     String  @db.VarChar(100)
+  username     String? @db.VarChar(100)
+  address      String? @db.VarChar(100)
+  phoneNumber  Int?    @map("phone_number")
+  policyAgreed Boolean @default(true) @map("policy_agreed")
+
+  @@map("users")
+}
