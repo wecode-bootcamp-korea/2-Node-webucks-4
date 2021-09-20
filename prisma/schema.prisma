@@ -10,73 +10,95 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Categories {
-  id Int @id @default(autoincrement())
-  name String
-  products Products[]
+model Category {
+  id      Int       @id @default(autoincrement())
+  name    String    @db.VarChar(100)
+  Product Product[]
 
   @@map("categories")
 }
 
-model Products{
-  id Int @id @default(autoincrement())
-  koreanName String @map("korean_name")
-  englishName String @map("english_name")
-  categoryId Int @map("category_id")
-  category Categories @relation(fields: [categoryId], references: [id])
-  image Images?
-  nutrition Nutritions[]
-  productAllergy ProductAllergies[]
-  
+model Product {
+  id             Int              @id @default(autoincrement())
+  category       Category         @relation(fields: [categoryId], references: [id])
+  categoryId     Int              @map("category_id")
+  koreanName     String           @map("korean_name") @db.VarChar(100)
+  englishName    String           @map("english_name") @db.VarChar(100)
+  Description    Description?
+  Image          Image?
+  Nutrition      Nutrition[]
+  ProductAllergy ProductAllergy[]
+
   @@map("products")
 }
 
-model Images{
-  id Int @id @default(autoincrement())
-  imageUrl String @map("image_url")
-  productId Int @map("product_id")
-  product Products @relation(fields: [productId], references:[id])
+model Description {
+  id        Int     @id @default(autoincrement())
+  content   String  @db.VarChar(3000)
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int     @map("product_id")
+
+  @@map("description")
+}
+
+model Image {
+  id        Int     @id @default(autoincrement())
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int     @map("product_id")
+  imageUrl  String  @map("image_url")
 
   @@map("images")
 }
 
-
-model Allergies{
-  id Int @id @default(autoincrement())
-  name String @map("name")
-  ProductAllergy ProductAllergies[]
+model Allergy {
+  id             Int              @id @default(autoincrement())
+  name           String           @map("name")
+  ProductAllergy ProductAllergy[]
 
   @@map("allergies")
 }
 
-model ProductAllergies{
-  id Int @id @default(autoincrement())
-  productId Int @map("product_id")
-  allergyId Int @map("allergy_id")
-  product Products @relation(fields: [productId], references:[id])
-  allergy Allergies @relation(fields: [allergyId], references:[id])
-  
+model ProductAllergy {
+  id        Int     @id @default(autoincrement())
+  productId Int     @map("product_id")
+  allergyId Int     @map("allergy_id")
+  product   Product @relation(fields: [productId], references: [id])
+  allergy   Allergy @relation(fields: [allergyId], references: [id])
+
   @@map("product_allergies")
 }
 
-model Nutritions{
-  id Int @id @default(autoincrement())
-  name String
-  amount String
-  productId Int @map("product_id")
-  product Products @relation(fields: [productId], references:[id])
+model Nutrition {
+  id          Int          @id @default(autoincrement())
+  product     Product      @relation(fields: [productId], references: [id])
+  productId   Int          @map("product_id")
+  kcal        Float        @db.Double
+  fat         Float        @db.Double
+  protein     Float        @db.Double
+  natrium     Float        @db.Double
+  sugar       Float        @db.Double
+  caffeine    Float        @db.Double
+  ServingSize ServingSize?
 
   @@map("nutritions")
 }
 
+model ServingSize {
+  id          Int       @id @default(autoincrement())
+  size        String    @db.VarChar(100)
+  nutrition   Nutrition @relation(fields: [nutritionId], references: [id])
+  nutritionId Int       @map("nutrition_id")
 
-model Users{
-  id Int @id @default(autoincrement())
-  email String @unique
-  password String 
-  userName String? @map("user_name")
-  address String? 
-  phoneNumber String? @map("phone_number")
+  @@map("serving_size")
+}
+
+model User {
+  id           Int     @id @default(autoincrement())
+  name         String?
+  email        String  @unique
+  password     String
+  address      String?
+  phoneNumber  String? @map("phone_number")
   policyAgreed Boolean @default(true) @map("policy_agreed")
 
   @@map("users")
