@@ -6,12 +6,12 @@ const router = express.Router();
 router.get('/', (req, res) => {
   res.send('Hello');
 });
-router.get('/users', userController.findAllUsers);
-router.post('/users', userController.createUser);
+router.get('/sign', userController.findAllUsers);
+router.post('/sign', userController.createUser);
 
-router.get('/product', userController.findAllUsers);
-router.get('/products', userController.findAllUsers);
+router.get('/login', userController.isLoginCheck);
 
-router.get('/login', userController.findAllUsers);
+// router.get('/product', productController);
+// router.post('/products', productController);
 
 export default router;

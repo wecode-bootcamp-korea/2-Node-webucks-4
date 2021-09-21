@@ -85,7 +85,9 @@ model Nutrition {
 
 model ServingSize {
   id          Int       @id @default(autoincrement())
-  size        String    @db.VarChar(100)
+  name        String    @db.VarChar(100)
+  ml          Float     @db.Double
+  floz        Int
   nutrition   Nutrition @relation(fields: [nutritionId], references: [id])
   nutritionId Int       @map("nutrition_id")
 

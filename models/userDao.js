@@ -1,20 +1,40 @@
 import prisma from '../prisma';
 
 const findAllUsers = async () => {
-  return await prisma.$queryRaw`
-    SELECT
-      id,
-      name,
-      email,
-      password
-    FROM
-      users;
-  `;
+  try {
+    return await prisma.$queryRaw`
+      SELECT
+        id,
+        name,
+        email,
+        password
+      FROM
+        users;
+    `;
+  } catch (err) {
+    throw err;
+  }
+};
+
+const isExistEmail = async email => {
+  try {
+    const [isExist] = await prisma.$queryRaw`
+      SELECT 
+        email 
+      FROM 
+        users 
+      WHERE 
+        email =${email};
+    `;
+    if (isExist) throw Error('이미 가입된 유저입니다.');
+  } catch (err) {
+    throw err;
+  }
 };
 
 const createUser = async (name, email, password) => {
-  console.log(name, email, password);
   try {
+    await isExistEmail(email);
     await prisma.$queryRaw`
       INSERT INTO 
         users(
@@ -41,8 +61,31 @@ const createUser = async (name, email, password) => {
     `;
     return newUsers;
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
-export default { findAllUsers, createUser };
+const isLoginCheck = async (email, password) => {
+  try {
+    const [isLogin] = await prisma.$queryRaw`
+      SELECT
+        id,
+        name,
+        email,
+        password
+      FROM
+        users
+      WHERE
+        email = ${email}
+        and
+        password = ${password};
+    `;
+    if (!isLogin)
+      throw Error('일치하는 회원정보가 없습니다. 회원가입을 해주세요');
+    return isLogin;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export default { findAllUsers, createUser, isExistEmail, isLoginCheck };
