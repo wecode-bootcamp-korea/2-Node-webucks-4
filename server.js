@@ -1,10 +1,6 @@
 const http = require("http");
-import express from "express";
-import router from "./router";
-
-const app = express();
-
-app.use(router);
+import app from "./app";
+import prisma from "./prisma";
 
 const server = http.createServer(app);
 
@@ -15,7 +11,7 @@ const start = async () => {
     );
   } catch (err) {
     console.error(err);
-    await prisma.$disconnect();
+    await prisma.$disconnect;
   }
 };
 

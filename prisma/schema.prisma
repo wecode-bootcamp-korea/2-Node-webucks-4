@@ -7,30 +7,29 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 model Category {
-  id       Int    @id @default(autoincrement())
-  category String @map("name")
-
-  Product Product[]
+  id       Int       @id @default(autoincrement())
+  category String    @map("name")
+  Product  Product[]
 
   @@map("categories")
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  koreanName  String   @map("korean_name")
-  englishName String   @map("english_name")
-  categoryId  Int      @map("category_id")
-  Category    Category @relation(fields: [categoryId], references: [id])
-
-  Image          Image[]
-  ProductAllergy ProductAllergy[]
-  Nutrition      Nutrition[]
-
+  id                 Int                  @id @default(autoincrement())
+  koreanName         String               @map("korean_name")
+  englishName        String               @map("english_name")
+  categoryId         Int                  @map("category_id")
+  Category           Category             @relation(fields: [categoryId], references: [id])
+  Image              Image[]
+  ProductAllergy     ProductAllergy[]
+  Nutrition          Nutrition[]
   ProductDescription ProductDescription[]
+
   @@map("products")
 }
 
@@ -44,10 +43,10 @@ model Image {
 }
 
 model Allergy {
-  id   Int    @id @default(autoincrement())
-  name String
-
+  id             Int              @id @default(autoincrement())
+  name           String
   ProductAllergy ProductAllergy[]
+
   @@map("allergies")
 }
 
