@@ -1,3 +1,36 @@
+// import http from "http";
+// import express from "express";
+// import coffeeRouter from "./routes/coffee";
+
+// const app = express();
+
+// app.get("/", (req, res) => {
+//   res.send("dkdkdjkksd");
+// });
+
+// app.use("/coffee", coffeeRouter);
+
+// app.use((err, req, res, next) => {
+//   const { status, message } = err;
+//   console.error(err);
+//   res.status(status || 500).json({ message });
+// });
+
+// const server = http.createServer(app);
+// const PORT = 8000;
+
+// const start = async () => {
+//   try {
+//     server.listen(PORT, () =>
+//       console.log(`Server is listening on PORT ${PORT}`)
+//     );
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
+
+// start();
+
 import http from "http";
 import express from "express";
 
