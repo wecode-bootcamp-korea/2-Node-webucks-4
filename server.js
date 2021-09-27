@@ -1,7 +1,8 @@
 import http from "http";
 import dotenv from "dotenv";
 import express from "express";
-import router from "./routes/UserRouter";
+// import router from "./routes/UserRouter";
+import router from "./routes/ProductRouter";
 // import app from "./app";
 // import routes from "./routes";
 
