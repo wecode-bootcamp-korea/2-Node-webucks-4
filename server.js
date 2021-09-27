@@ -1,14 +1,11 @@
-import http from 'http';
-import express from 'express';
+import app from './app';
 
-const app = express();
+const PORT = 8000;
 
-app.get('/', (req, res) => {
-  res.send('hellog back world');
-});
+const start = async () => {
+  app.listen(PORT, () => {
+    console.log('서버가 3000번에 열렸어요~');
+  });
+};
 
-const server = http.createServer(app);
-
-server.listen(8000, () => {
-  console.log('서버가 8000번 포트로 열렸습니다!');
-});
+start();

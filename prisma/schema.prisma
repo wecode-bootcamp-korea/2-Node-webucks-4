@@ -1,7 +1,7 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-datasource we_starbucks {
+datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
@@ -10,56 +10,72 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model categories {
+model Categories {
   id   Int    @id @default(autoincrement())
-  name String
+  name String @db.VarChar(100)
+
+  Products Products[]
+  @@map("categories")
 }
 
-model products {
-  id                 Int                  @id @default(autoincrement())
-  korean_name        String
-  english_name       String
-  category_id        Int
-  images             images[]
-  products_allergies products_allergies[]
-  nutritions         nutritions[]
+model Products {
+  id          Int        @id @default(autoincrement())
+  koreanName  String     @map("korean_name") @db.VarChar(100)
+  englishName String     @map("english_name") @db.VarChar(100)
+  categoryId  Int        @map("category_id")
+  Categories  Categories @relation(fields: [categoryId], references: [id])
+
+  Images            Images[]
+  ProductsAllergies ProductsAllergies[]
+  Nutritions        Nutritions[]
+  @@map("products")
 }
 
-model images {
+model Images {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String   @map("image_url") @db.VarChar(500)
+  productId Int      @map("product_id")
+  Products  Products @relation(fields: [productId], references: [id])
+
+  @@map("images")
+}
+
+model Allergies {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(100)
+
+  ProductsAllergies ProductsAllergies[]
+  @@map("allergies")
+}
+
+model ProductsAllergies {
+  id        Int       @id @default(autoincrement())
+  productId Int       @map("product_id")
+  allergyId Int       @map("allergy_id")
+  Products  Products  @relation(fields: [productId], references: [id])
+  Allergies Allergies @relation(fields: [allergyId], references: [id])
+
+  @@map("products_allergies")
+}
+
+model Nutritions {
   id         Int      @id @default(autoincrement())
-  image_url  String
-  product_id Int
-  products   products @relation(fields: [product_id], references: [id])
+  name       String   @db.VarChar(100)
+  productsId Int      @map("product_id")
+  amount     Float
+  Products   Products @relation(fields: [productsId], references: [id])
+
+  @@map("nutritions")
 }
 
-model allergies {
-  id                 Int                  @id @default(autoincrement())
-  name               String
-  products_allergies products_allergies[]
-}
+model Users {
+  id           Int     @id @default(autoincrement())
+  email        String  @unique @db.VarChar(100)
+  password     String  @db.VarChar(100)
+  username     String? @db.VarChar(100)
+  address      String? @db.VarChar(100)
+  phoneNumber  String? @map("phone_number") @db.VarChar(100)
+  policyAgreed Boolean @default(true) @map("policy_agreed")
 
-model products_allergies {
-  id         Int       @id
-  product_id Int
-  allergy_id Int
-  products   products  @relation(fields: [product_id], references: [id])
-  allergies  allergies @relation(fields: [allergy_id], references: [id])
-}
-
-model nutritions {
-  id          Int      @id @default(autoincrement())
-  name        String
-  products_id Int
-  amount      Float
-  products    products @relation(fields: [products_id], references: [id])
-}
-
-model users {
-  id            Int     @id @default(autoincrement())
-  email         String  @unique
-  password      String
-  username      Float?
-  address       String?
-  phone_number  String?
-  policy_agreed Boolean @default(true)
+  @@map("users")
 }
