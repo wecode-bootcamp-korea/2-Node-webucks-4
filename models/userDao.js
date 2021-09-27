@@ -1,91 +1,62 @@
 import prisma from '../prisma';
 
-const findAllUsers = async () => {
-  try {
-    return await prisma.$queryRaw`
-      SELECT
-        id,
-        name,
-        email,
-        password
-      FROM
-        users;
-    `;
-  } catch (err) {
-    throw err;
-  }
-};
-
 const isExistEmail = async email => {
-  try {
-    const [isExist] = await prisma.$queryRaw`
-      SELECT 
-        email 
-      FROM 
-        users 
-      WHERE 
-        email =${email};
-    `;
-    if (isExist) throw Error('이미 가입된 유저입니다.');
-  } catch (err) {
-    throw err;
-  }
+  const [isExist] = await prisma.$queryRaw`
+    SELECT 
+      email 
+    FROM 
+      users 
+    WHERE 
+      email =${email};
+  `;
+  if (isExist) throw new ReferenceError('이미 가입된 유저입니다.');
 };
 
-const createUser = async (name, email, password) => {
-  try {
-    await isExistEmail(email);
-    await prisma.$queryRaw`
-      INSERT INTO 
-        users(
-          name, 
-          email, 
-          password
-        ) 
-      VALUES(
-        ${name}, 
-        ${email}, 
-        ${password}
-      );
-    `;
-    const [newUsers] = await prisma.$queryRaw`
-      SELECT
-       u.id, 
-       u.name, 
-       u.email, 
-       u.password
-      FROM 
-        users u
-      ORDER BY id DESC
-      LIMIT 1;
-    `;
-    return newUsers;
-  } catch (err) {
-    throw err;
-  }
+const findLastUser = async () => {
+  const [newUsers] = await prisma.$queryRaw`
+    SELECT
+    u.id, 
+    u.name, 
+    u.email, 
+    u.password
+    FROM 
+      users u
+    ORDER BY id DESC
+    LIMIT 1;
+  `;
+  return newUsers;
+};
+
+const createUser = async (email, password) => {
+  await isExistEmail(email);
+  await prisma.$queryRaw`
+    INSERT INTO 
+      users(
+        email, 
+        password
+      ) 
+    VALUES(
+      ${email}, 
+      ${password}
+    );
+  `;
+  return findLastUser();
 };
 
 const isLoginCheck = async (email, password) => {
-  try {
-    const [isLogin] = await prisma.$queryRaw`
-      SELECT
-        id,
-        name,
-        email,
-        password
-      FROM
-        users
-      WHERE
-        email = ${email}
-        and
-        password = ${password};
-    `;
-    if (!isLogin)
-      throw Error('일치하는 회원정보가 없습니다. 회원가입을 해주세요');
-    return isLogin;
-  } catch (err) {
-    throw err;
-  }
+  const [isLogin] = await prisma.$queryRaw`
+    SELECT
+      id,
+      email,
+      password
+    FROM
+      users
+    WHERE
+      email = ${email}
+      and
+      password = ${password};
+  `;
+  return isLogin;
 };
 
-export default { findAllUsers, createUser, isExistEmail, isLoginCheck };
+export default { createUser, isLoginCheck };

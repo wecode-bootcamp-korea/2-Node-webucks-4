@@ -11,15 +11,19 @@ generator client {
 }
 
 model Category {
-  id      Int       @id @default(autoincrement())
-  name    String    @db.VarChar(100)
-  Product Product[]
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+  name      String    @db.VarChar(100)
+  Product   Product[]
 
   @@map("categories")
 }
 
 model Product {
   id             Int              @id @default(autoincrement())
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @default(now()) @updatedAt @map("updated_at")
   category       Category         @relation(fields: [categoryId], references: [id])
   categoryId     Int              @map("category_id")
   koreanName     String           @map("korean_name") @db.VarChar(100)
@@ -28,30 +32,38 @@ model Product {
   Image          Image?
   Nutrition      Nutrition[]
   ProductAllergy ProductAllergy[]
+  Comment        Comment[]
+  ProductLike    ProductLike[]
 
   @@map("products")
 }
 
 model Description {
-  id        Int     @id @default(autoincrement())
-  content   String  @db.VarChar(3000)
-  product   Product @relation(fields: [productId], references: [id])
-  productId Int     @map("product_id")
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  content   String   @db.VarChar(3000)
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int      @map("product_id")
 
   @@map("description")
 }
 
 model Image {
-  id        Int     @id @default(autoincrement())
-  product   Product @relation(fields: [productId], references: [id])
-  productId Int     @map("product_id")
-  imageUrl  String  @map("image_url")
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int      @map("product_id")
+  imageUrl  String   @map("image_url")
 
   @@map("images")
 }
 
 model Allergy {
   id             Int              @id @default(autoincrement())
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @default(now()) @updatedAt @map("updated_at")
   name           String           @map("name")
   ProductAllergy ProductAllergy[]
 
@@ -70,6 +82,8 @@ model ProductAllergy {
 
 model Nutrition {
   id          Int          @id @default(autoincrement())
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @default(now()) @updatedAt @map("updated_at")
   product     Product      @relation(fields: [productId], references: [id])
   productId   Int          @map("product_id")
   kcal        Float        @db.Double
@@ -85,6 +99,8 @@ model Nutrition {
 
 model ServingSize {
   id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
   name        String    @db.VarChar(100)
   ml          Float     @db.Double
   floz        Int
@@ -95,13 +111,54 @@ model ServingSize {
 }
 
 model User {
-  id           Int     @id @default(autoincrement())
+  id           Int           @id @default(autoincrement())
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @default(now()) @updatedAt @map("updated_at")
   name         String?
-  email        String  @unique
+  email        String        @unique
   password     String
   address      String?
-  phoneNumber  String? @map("phone_number")
-  policyAgreed Boolean @default(true) @map("policy_agreed")
+  phoneNumber  String?       @map("phone_number")
+  policyAgreed Boolean       @default(true) @map("policy_agreed")
+  ProductLike  ProductLike[]
+  Comment      Comment[]
+  CommentLike  CommentLike[]
 
   @@map("users")
+}
+
+model Comment {
+  id          Int           @id @default(autoincrement())
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @default(now()) @updatedAt @map("updated_at")
+  content     String
+  userId      Int?          @map("user_id")
+  productId   Int?          @map("product_id")
+  product     Product?      @relation(fields: [productId], references: [id])
+  user        User?         @relation(fields: [userId], references: [id])
+  CommentLike CommentLike[]
+
+  @@map("comments")
+}
+
+model CommentLike {
+  id        Int      @id @default(autoincrement())
+  userId    Int?     @map("users_id")
+  commentId Int?     @map("comments_id")
+  user      User?    @relation(fields: [userId], references: [id])
+  comment   Comment? @relation(fields: [commentId], references: [id])
+
+  @@unique([userId, commentId])
+  @@map("comments_likes")
+}
+
+model ProductLike {
+  id        Int      @id @default(autoincrement())
+  userId    Int?     @map("users_id")
+  productId Int?     @map("coffees_id")
+  user      User?    @relation(fields: [userId], references: [id])
+  product   Product? @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId])
+  @@map("coffees_likes")
 }

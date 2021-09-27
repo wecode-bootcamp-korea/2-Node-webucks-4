@@ -1,17 +1,10 @@
 import express from 'express';
-import { userController } from '../controlleres';
+import controller from '../controlleres';
 
-const router = express.Router();
+const { userController } = controller;
+const userRouter = express.Router();
 
-router.get('/', (req, res) => {
-  res.send('Hello');
-});
-router.get('/sign', userController.findAllUsers);
-router.post('/sign', userController.createUser);
+userRouter.post('/sign', userController.createUser);
+userRouter.get('/login', userController.isLoginCheck);
 
-router.get('/login', userController.isLoginCheck);
-
-// router.get('/product', productController);
-// router.post('/products', productController);
-
-export default router;
+export default userRouter;

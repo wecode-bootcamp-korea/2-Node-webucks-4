@@ -1,51 +1,37 @@
-import { userService } from '../services';
+import service from '../services';
 
-const findAllUsers = async (req, res) => {
-  try {
-    const users = await userService.findAllUsers();
-    res.status(201).json({
-      message: 'SUCCESS',
-      data: users,
-    });
-  } catch (err) {
-    console.log(err);
-  }
+const { userService } = service;
+
+const resMessage = (res, message, data) => {
+  res.status(201).json({
+    name: 'Sucess',
+    message,
+    data,
+  });
 };
 
-const isCheck = (email, password) => {
-  const isCheckEmail = email.includes('@') && email.includes('.com') && email;
-  const isCheckPassword = password;
-  if (!isCheckEmail) throw Error('이메일 형식이 잘못되었습니다');
-  else if (!isCheckPassword)
-    throw Error('비밀번호가 입력이 되어있지 않습니다.');
-};
-
-const createUser = async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-    isCheck(email, password);
-    const user = await userService.createUser(name, email, password);
-    res.status(201).json({
-      message: 'CREATED',
-      data: user,
-    });
-  } catch (err) {
-    res.status(403).json({ message: err.message });
-  }
-};
-
-const isLoginCheck = async (req, res) => {
+const createUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    isCheck(email, password);
-    const user = await userService.isLoginCheck(email, password);
-    res.status(201).json({
-      message: 'CREATED',
-      data: user,
-    });
+    const user = await userService.createUser(email, password, next);
+    resMessage(res, '회원가입 성공~!', user);
   } catch (err) {
-    res.status(403).json({ message: err.message });
+    next(err);
   }
 };
 
-export default { findAllUsers, createUser, isLoginCheck };
+const isLoginCheck = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const user = await userService.isLoginCheck(email, password);
+    if (!user) {
+      resMessage(res, '로그인 실패~!');
+    } else {
+      resMessage(res, '로그인 성공~!', user);
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export default { createUser, isLoginCheck };
