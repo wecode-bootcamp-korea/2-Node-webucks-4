@@ -1,4 +1,4 @@
-import UserDao from "../models/UserDao";
+import { UserDao } from "../models";
 
 const getAllUsers = async () => {
   return await UserDao.getAllUsers();

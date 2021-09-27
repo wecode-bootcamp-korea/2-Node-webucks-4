@@ -1,10 +1,10 @@
 import express from "express";
-import UserController from "../controllers/UserController";
+import { UserController } from "../controllers";
 
 const router = express.Router();
 
-router.get("/users", UserController.getAllUsers);
-router.post("/users/signup", UserController.createUser);
+router.get("/", UserController.getAllUsers);
+router.post("/signup", UserController.createUser);
 
 router.use((req, res, next) => {
   // DELETE?

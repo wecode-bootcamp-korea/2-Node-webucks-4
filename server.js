@@ -1,15 +1,13 @@
 import http from "http";
 import dotenv from "dotenv";
 import express from "express";
-// import router from "./routes/UserRouter";
-import router from "./routes/ProductRouter";
 // import app from "./app";
-// import routes from "./routes";
+import routes from "./routes";
 
 const app = express();
 
 app.use(express.json()); // for parsing application/json (for POST, PUT, etc. stuff with req.body)
-app.use(router);
+app.use(routes);
 // app.use((err, req, res, next) => {
 //   const { status, message } = err;
 //   console.error(err);
