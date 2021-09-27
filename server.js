@@ -1,7 +1,7 @@
 const http = require("http");
 import app from "./app";
 import prisma from "./prisma";
-import { serverConfig } from "./config";
+import { serverConfig } from "./configs";
 
 const server = http.createServer(app);
 const PORT = serverConfig.port;

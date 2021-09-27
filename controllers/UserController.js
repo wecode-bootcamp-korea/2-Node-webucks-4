@@ -13,7 +13,7 @@ const registerUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const message = await UserService.registerUser(email, password);
-    res.status(200).json(message);
+    res.status(201).json({ message: message });
   } catch (err) {
     next(err);
   }

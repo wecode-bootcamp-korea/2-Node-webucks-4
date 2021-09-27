@@ -1,5 +1,5 @@
 const errorLogger = (err, req, res, next) => {
-  console.log("Path: ", req.path);
+  console.log("PATH: ", req.path);
   console.error("\x1b[31m", err);
   next(err);
 };

@@ -4,7 +4,7 @@ import {
   errorLogger,
   errorResponder,
   invalidPathHandler,
-} from "./middleware/errorHandler";
+} from "./middlewares/errorHandler";
 
 const app = express();
 

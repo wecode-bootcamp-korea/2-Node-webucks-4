@@ -15,7 +15,9 @@ const registerUser = async (email, hashedPassword) => {
 };
 
 const getUserInfo = async (email) => {
-  return await prisma.$queryRaw`SELECT * FROM users WHERE email=${email};`;
+  const [userInfo] =
+    await prisma.$queryRaw`SELECT * FROM users WHERE email=${email};`;
+  return userInfo;
 };
 
 export { getAllUsers, registerUser, getUserInfo };

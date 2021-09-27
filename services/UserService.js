@@ -1,38 +1,32 @@
-import bcrypt from "bcryptjs";
 import { UserDAO } from "../models";
 import { UserError } from "../errors";
-import { authUtils } from "../utils";
+import { authUtils, bcryptUtils } from "../utils";
 
 const getAllUsers = async () => {
   return await UserDAO.getAllUsers();
 };
 
 const registerUser = async (email, password) => {
-  const hashedPassword = await bcryptPassword(password);
+  const hashedPassword = await bcryptUtils.hashPassword(password);
   const isRegistered =
     (await UserDAO.registerUser(email, hashedPassword)) === 1;
   if (!isRegistered) {
-    throw new UserError.RegisterFailedError();
+    throw new UserError.EmailDuplicateError();
   }
   return "회원가입 성공";
 };
 
 const verifyLoginUser = async (email, password) => {
   const storedUserInfo = await getUserInfo(email);
-  if (storedUserInfo.length === 0) {
-    throw new UserError.LoginFailedError();
+  if (storedUserInfo == null) {
+    throw new UserError.NonExistentEmailError();
   }
-  const storedPassword = storedUserInfo[0].password;
-  if (!(await bcrypt.compare(password, storedPassword))) {
-    throw new UserError.LoginFailedError();
+  const storedPassword = storedUserInfo.password;
+  if (!(await bcryptUtils.comparePassword(password, storedPassword))) {
+    throw new UserError.InvaildPasswordError();
   }
-  const userId = storedUserInfo[0].id;
+  const userId = storedUserInfo.id;
   return authUtils.makeToken(userId);
-};
-
-const bcryptPassword = async (password) => {
-  const salt = await bcrypt.genSalt(10);
-  return await bcrypt.hash(password, salt);
 };
 
 const getUserInfo = async (email) => {

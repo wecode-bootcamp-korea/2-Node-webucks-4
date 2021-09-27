@@ -1,10 +1,16 @@
 import jwt from "jsonwebtoken";
-import { jwtConfig } from "../config";
+import { jwtConfig } from "../configs";
+import { UserError } from "../errors";
 
 const makeToken = (userId) => {
-  const secret = jwtConfig.secret;
-  const token = jwt.sign({ id: userId }, secret, { expiresIn: "1h" });
-  return token;
+  try {
+    const secret = jwtConfig.secret;
+    let token = jwt.sign({ id: userId }, secret, { expiresIn: "1h" });
+    return token;
+  } catch (err) {
+    console.error(err);
+    throw new UserError.TokenError();
+  }
 };
 
 export { makeToken };
