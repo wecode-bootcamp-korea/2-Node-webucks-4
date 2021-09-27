@@ -19,4 +19,14 @@ const registerUser = async (req, res, next) => {
   }
 };
 
-export { getAllUsers, registerUser };
+const verifyLoginUser = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const token = await UserService.verifyLoginUser(email, password);
+    res.status(200).json({ message: "로그인 성공", token });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export { getAllUsers, registerUser, verifyLoginUser };

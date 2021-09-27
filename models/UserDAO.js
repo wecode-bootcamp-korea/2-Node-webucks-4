@@ -1,11 +1,21 @@
-import prisma from "../prisma";
+import { prisma, Prisma } from "../prisma";
 
 const getAllUsers = async () => {
-  return await prisma.$queryRaw`SELECT * FROM users`;
+  return await prisma.$queryRaw`SELECT * FROM users;`;
 };
 
-const registerUser = async (email, password) => {
-  return await prisma.$executeRaw`INSERT INTO users (email, password) VALUES(${email}, ${password})`;
+const registerUser = async (email, hashedPassword) => {
+  try {
+    return await prisma.$executeRaw`INSERT INTO users (email, password) VALUES(${email}, ${hashedPassword});`;
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      console.error(err);
+    }
+  }
 };
 
-export { getAllUsers, registerUser };
+const getUserInfo = async (email) => {
+  return await prisma.$queryRaw`SELECT * FROM users WHERE email=${email};`;
+};
+
+export { getAllUsers, registerUser, getUserInfo };

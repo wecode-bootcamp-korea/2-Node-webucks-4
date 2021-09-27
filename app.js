@@ -1,15 +1,17 @@
 import express from "express";
 import router from "./routes";
+import {
+  errorLogger,
+  errorResponder,
+  invalidPathHandler,
+} from "./middleware/errorHandler";
 
 const app = express();
-app.use(router);
 
-app.use((err, req, res, next) => {
-  console.log("Error Handling Middleware called");
-  console.log("Path: ", req.path);
-  console.error("Error: ", err);
-  const { status, message } = err;
-  res.status(status || 500).json({ message });
-});
+app.use(express.json());
+app.use(router);
+app.use(errorLogger);
+app.use(errorResponder);
+app.use(invalidPathHandler);
 
 export default app;
