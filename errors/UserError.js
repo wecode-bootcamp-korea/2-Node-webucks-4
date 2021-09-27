@@ -7,6 +7,7 @@ class RegisterFailed extends Error {
       this.content = "inputted email already exist";
     if (this instanceof BcryptHashError)
       this.content = "failed to hash password";
+
     this.status = 500;
     this.message = "회원가입 실패";
   }
@@ -24,7 +25,8 @@ class LoginFailed extends Error {
       this.content = "non-existent email";
     if (this instanceof BcryptCompareError)
       this.content = "failed to compare passwords";
-    if (this instanceof InvaildPasswordError) this.content = "invaild password";
+    if (this instanceof InvaildPasswordError)
+      this.content = "invaild password input";
     if (this instanceof TokenError) this.content = "failed to make a token";
 
     this.status = 401;

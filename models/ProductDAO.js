@@ -14,7 +14,7 @@ const getAllProducts = async () => {
           category: true,
         },
       },
-      Image: {
+      ProductImage: {
         select: {
           imageUrl: true,
         },
@@ -62,16 +62,24 @@ const getProduct = async (productId) => {
     },
     select: {
       id: true,
+      categoryId: true,
       koreanName: true,
       englishName: true,
-      ProductDescription: {
-        select: {
-          description: true,
-        },
-      },
-      Image: {
+      description: true,
+      isNew: true,
+      ProductImage: {
         select: {
           imageUrl: true,
+        },
+      },
+      Nutrition: {
+        select: {
+          calories: true,
+          fat: true,
+          protein: true,
+          natrium: true,
+          sugar: true,
+          caffeine: true,
         },
       },
     },
@@ -90,21 +98,7 @@ const getProduct = async (productId) => {
     },
   });
 
-  const nutritionInfo = await prisma.nutrition.findMany({
-    where: {
-      productId: +productId,
-    },
-    select: {
-      name: true,
-      amount: true,
-    },
-  });
-
   data["allergens"] = allergens;
-  data["nutritionInfo"] = {};
-  nutritionInfo.forEach(
-    (nutrition) => (data["nutritionInfo"][nutrition.name] = nutrition.amount)
-  );
   return data;
 };
 
