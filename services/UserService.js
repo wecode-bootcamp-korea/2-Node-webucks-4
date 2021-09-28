@@ -8,4 +8,8 @@ const createUser = async (email, password) => {
   return await UserDao.createUser(email, password);
 };
 
-export default { getAllUsers, createUser };
+const loginUser = async (email, password) => {
+  return await UserDao.loginUser(email, password);
+};
+
+export default { getAllUsers, createUser, loginUser };
