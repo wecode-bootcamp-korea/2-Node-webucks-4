@@ -21,6 +21,7 @@
     "@babel/preset-env": "^7.15.6",
     "bcryptjs": "^2.4.3",
     "dotenv": "^10.0.0",
+    "jsonwebtoken": "^8.5.1",
     "prisma": "^3.0.2"
   }
 }

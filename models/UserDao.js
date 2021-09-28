@@ -33,7 +33,7 @@ const createUser = async (email, password) => {
   return createdUser;
 };
 
-const loginUser = async (email, password) => {
+const loginUser = async email => {
   const [user] = await prisma.$queryRaw`
     SELECT
       id,
