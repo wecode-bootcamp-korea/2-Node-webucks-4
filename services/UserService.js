@@ -13,7 +13,7 @@ const registerUser = async (email, password) => {
   if (!isRegistered) {
     throw new UserError.EmailDuplicateError();
   }
-  return "회원가입 성공";
+  return "USER_REGISTER_SUCESS";
 };
 
 const verifyLoginUser = async (email, password) => {

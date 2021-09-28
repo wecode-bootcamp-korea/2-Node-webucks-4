@@ -6,12 +6,16 @@ import ListRouter from "./ListRouter";
 
 const router = express.Router();
 
+router.get("/", (req, res, next) => {
+  res.status(200).json({ message: "Welcome Webucks API Node Server" });
+});
+
 router.use("/users", UserRouter);
 router.use("/products", ProductRouter);
 router.use("/list", ListRouter);
 
-router.get("/not-found", (req, res) => {
-  res.status(404).json({ message: "존재하지 않는 URL입니다." });
+router.get("/not-found", (req, res, next) => {
+  res.status(404).json({ message: "URL_NOT_FOUND" });
 });
 
 export default router;

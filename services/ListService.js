@@ -1,7 +1,12 @@
+import { CommonError } from "../errors";
 import { ListDAO } from "../models";
 
 const getAllCategories = async () => {
-  return await ListDAO.getAllCategories();
+  const categories = await ListDAO.getAllCategories();
+  if (categories == null) {
+    throw new CommonError.ItemNotFoundError();
+  }
+  return categories;
 };
 
 export { getAllCategories };

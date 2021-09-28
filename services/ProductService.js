@@ -1,11 +1,20 @@
+import { CommonError } from "../errors";
 import { ProductDAO } from "../models";
 
 const getAllProducts = async () => {
-  return await ProductDAO.getAllProducts();
+  const productList = await ProductDAO.getAllProducts();
+  if (productList == null) {
+    throw new CommonError.ItemNotFoundError();
+  }
+  return productList;
 };
 
 const getProduct = async (productId) => {
-  return await ProductDAO.getProduct(productId);
+  const product = await ProductDAO.getProduct(productId);
+  if (product == null) {
+    throw new CommonError.ItemNotFoundError();
+  }
+  return product;
 };
 
 export { getAllProducts, getProduct };
