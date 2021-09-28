@@ -1,22 +1,23 @@
 import prisma from '../prisma';
 
-const isExistEmail = async email => {
-  const [isExist] = await prisma.$queryRaw`
+const checkEmail = async email => {
+  const [isEmail] = await prisma.$queryRaw`
     SELECT 
-      email 
+      id,
+      email,
+      password 
     FROM 
       users 
     WHERE 
       email =${email};
   `;
-  if (isExist) throw new ReferenceError('이미 가입된 유저입니다.');
+  return isEmail;
 };
 
 const findLastUser = async () => {
-  const [newUsers] = await prisma.$queryRaw`
+  const newUsers = await prisma.$queryRaw`
     SELECT
     u.id, 
-    u.name, 
     u.email, 
     u.password
     FROM 
@@ -28,7 +29,8 @@ const findLastUser = async () => {
 };
 
 const createUser = async (email, password) => {
-  await isExistEmail(email);
+  const isEmail = await checkEmail(email);
+  if (isEmail) throw new ReferenceError('이메일이 존재합니다.');
   await prisma.$queryRaw`
     INSERT INTO 
       users(
@@ -43,20 +45,4 @@ const createUser = async (email, password) => {
   return findLastUser();
 };
 
-const isLoginCheck = async (email, password) => {
-  const [isLogin] = await prisma.$queryRaw`
-    SELECT
-      id,
-      email,
-      password
-    FROM
-      users
-    WHERE
-      email = ${email}
-      and
-      password = ${password};
-  `;
-  return isLogin;
-};
-
-export default { createUser, isLoginCheck };
+export default { createUser, checkEmail };

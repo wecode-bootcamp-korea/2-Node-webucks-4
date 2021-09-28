@@ -5,6 +5,6 @@ const { userController } = controller;
 const userRouter = express.Router();
 
 userRouter.post('/sign', userController.createUser);
-userRouter.get('/login', userController.isLoginCheck);
+userRouter.get('/login', userController.checkEmail);
 
 export default userRouter;
