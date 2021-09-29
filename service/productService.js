@@ -1,7 +1,7 @@
-import { detailDAO } from '../model';
+import { productDAO } from '../model';
 
-const detailDataService = async req => {
-  const detailData = await detailDAO.detailDataDAO(req);
+const getProductDetail = async id => {
+  const detailData = await productDAO.getProductDetail(id);
   if (detailData.length > 1)
     for (let i = 1; i < detailData.length; i++)
       detailData[0].allergy += ', ' + detailData[i].allergy;
@@ -9,4 +9,4 @@ const detailDataService = async req => {
   return detailData;
 };
 
-export { detailDataService };
+export default { getProductDetail };

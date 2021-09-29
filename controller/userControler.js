@@ -1,17 +1,19 @@
 import { userService } from '../service';
 
-const signinControler = async (req, res) => {
+const createUser = async (req, res) => {
   const userData = req.body;
-  const createdAccont = await userService.signinService(userData);
-  res.json(createdAccont);
+  const createdAccont = await userService.createUser(userData);
+  res.status(200).json(createdAccont);
 };
 
-const loginControler = async (req, res) => {
-  const userData = req;
-  const loginResult = await userService.loginService(userData);
+const login = async (req, res) => {
+  const userData = req.body;
+  const loginResult = await userService.login(userData);
   loginResult
-    ? res.json(loginResult)
-    : res.json({ message: '아이디 혹은 비밀번호가 일치하지 않습니다.' });
+    ? res.status(200).json(loginResult)
+    : res
+        .status(400)
+        .json({ message: '아이디 혹은 비밀번호가 일치하지 않습니다.' });
 };
 
-export { signinControler, loginControler };
+export default { createUser, login };

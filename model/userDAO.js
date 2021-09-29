@@ -1,11 +1,11 @@
 import prisma from './Model';
 
-const signinDAO = async userData => {
+const createUser = async userData => {
   const { email, password, username, address, phone_number, policy_agreed } =
     userData;
   await prisma.$queryRaw`
   INSERT INTO users 
-  VALUES (default, ${email}, ${password}, ${username}, ${address}, ${phone_number}, ${policy_agreed});
+  VALUES (default, ${email}, ${password}, ${username}, ${address}, ${phone_number}, ${policy_agreed}, default, default);
   `;
 
   const [createdAccount] = await prisma.$queryRaw`
@@ -18,16 +18,13 @@ const signinDAO = async userData => {
   return createdAccount;
 };
 
-const loginDAO = async userData => {
-  const { email } = userData.body;
-
-  const loginData = await prisma.$queryRaw`
+const login = async userData => {
+  const { email } = userData;
+  return await prisma.$queryRaw`
   SELECT users.id, users.password
   FROM users
   WHERE users.email=${email};
   `;
-
-  return loginData;
 };
 
-export { signinDAO, loginDAO };
+export default { createUser, login };

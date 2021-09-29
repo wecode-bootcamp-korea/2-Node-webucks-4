@@ -1,8 +1,8 @@
 import { listService } from '../service';
 
-const listDataControler = async (req, res) => {
-  const listData = await listService.listDataService(req);
-  res.json(listData);
+const getListData = async (req, res) => {
+  const listData = await listService.getListData();
+  res.status(200).json(listData);
 };
 
-export { listDataControler };
+export default { getListData };

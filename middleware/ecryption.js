@@ -8,4 +8,4 @@ const comparePw = async (plainPw, hash) => {
   return await bcrypt.compare(plainPw, hash);
 };
 
-export { encryptPw, comparePw };
+export default { encryptPw, comparePw };

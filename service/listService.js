@@ -1,8 +1,7 @@
 import { listDAO } from '../model';
 
-const listDataService = async req => {
-  const listData = await listDAO.listDataDAO(req);
-  return listData;
+const getListData = async () => {
+  return await listDAO.getListData();
 };
 
-export { listDataService };
+export default { getListData };

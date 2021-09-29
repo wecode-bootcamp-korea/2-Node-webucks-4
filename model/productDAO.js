@@ -1,10 +1,7 @@
-import { detailControler } from '../controller';
 import prisma from './Model';
 
-const detailDataDAO = async req => {
-  const { id } = req.params;
-  console.log(id);
-  const detailData = await prisma.$queryRaw`
+const getProductDetail = async id => {
+  return await prisma.$queryRaw`
   SELECT products.id, categories.name as category_name, products.korean_name, 
   products.english_name, images.image_url, nutritions.name as size, 
   nutritions.amount, allergies.name as allergy
@@ -27,8 +24,6 @@ const detailDataDAO = async req => {
 
   WHERE products.id = ${id};
   `;
-  console.log(detailData);
-  return detailData;
 };
 
-export { detailDataDAO };
+export default { getProductDetail };

@@ -1,19 +1,19 @@
 import { userDAO } from '../model';
-import * as encryption from '../middleware/ecryption';
-import * as token from '../middleware/token';
+import encryption from '../middleware/ecryption';
+import token from '../middleware/token';
 
-const signinService = async userData => {
+const createUser = async userData => {
+  // 중복확인 (미구현)
   userData.password = await encryption.encryptPw(userData.password);
-  const createdAccont = await userDAO.signinDAO(userData);
-  return createdAccont;
+  return await userDAO.createUser(userData);
 };
 
-const loginService = async userData => {
-  const { password: userInputPw } = userData.body;
-  const [loginResult] = await userDAO.loginDAO(userData);
+const login = async userData => {
+  const { password: userInputPw } = userData;
+  const [loginResult] = await userDAO.login(userData);
   const isMatch = await encryption.comparePw(userInputPw, loginResult.password);
   if (isMatch) return await token.issue(loginResult.id);
   else return null;
 };
 
-export { signinService, loginService };
+export default { createUser, login };

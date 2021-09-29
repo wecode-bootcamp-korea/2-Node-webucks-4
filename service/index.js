@@ -1,5 +1,5 @@
-import * as userService from './userService';
-import * as listService from './listService';
-import * as detailService from './detailService';
+import userService from './userService';
+import listService from './listService';
+import productService from './productService';
 
-export { userService, listService, detailService };
+export { userService, listService, productService };

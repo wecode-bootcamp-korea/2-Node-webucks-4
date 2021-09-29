@@ -1,5 +1,5 @@
-import * as userControler from './userControler';
-import * as listControler from './listControler';
-import * as detailControler from './detailControler';
+import userControler from './userControler';
+import listControler from './listControler';
+import productControler from './productControler';
 
-export { userControler, listControler, detailControler };
+export { userControler, listControler, productControler };

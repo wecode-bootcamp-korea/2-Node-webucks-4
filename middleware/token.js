@@ -6,4 +6,4 @@ const issue = async id => {
   return jwt.sign({ id: id }, KEY, { expiresIn: '1h' });
 };
 
-export { issue };
+export default { issue };

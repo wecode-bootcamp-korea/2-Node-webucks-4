@@ -1,5 +1,5 @@
-import * as userDAO from './userDAO';
-import * as listDAO from './listDAO';
-import * as detailDAO from './detailDAO';
+import userDAO from './userDAO';
+import listDAO from './listDAO';
+import productDAO from './productDAO';
 
-export { userDAO, listDAO, detailDAO };
+export { userDAO, listDAO, productDAO };

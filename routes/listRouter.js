@@ -3,6 +3,6 @@ import { listControler } from '../controller';
 
 const Router = express.Router();
 
-Router.get('/listdata', listControler.listDataControler);
+Router.get('/', listControler.getListData);
 
 export default Router;
