@@ -1,4 +1,13 @@
+import ApiError from '../error/apiErrors';
 import prisma from './Model';
+
+const chechUserExists = async email => {
+  return await prisma.$queryRaw`
+  SELECT email
+  FROM users
+  WHERE email=${email};
+  `;
+};
 
 const createUser = async userData => {
   const { email, password, username, address, phone_number, policy_agreed } =
@@ -18,8 +27,7 @@ const createUser = async userData => {
   return createdAccount;
 };
 
-const login = async userData => {
-  const { email } = userData;
+const login = async email => {
   return await prisma.$queryRaw`
   SELECT users.id, users.password
   FROM users
@@ -27,4 +35,4 @@ const login = async userData => {
   `;
 };
 
-export default { createUser, login };
+export default { chechUserExists, createUser, login };
