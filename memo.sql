@@ -35,7 +35,13 @@ ON products.id = products_allergies.product_id
 LEFT JOIN allergies
 ON products_allergies.allergy_id = allergies.id
 
-WHERE products.id = ${id};
+WHERE products.id = 1;
+
+
+
+
+
+
 
 
 INSERT INTO nutritions VALUES (default, 'Bottle(보틀)', 500, 1);

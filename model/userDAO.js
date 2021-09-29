@@ -1,16 +1,15 @@
 import prisma from './Model';
 
-const signinDAO = async req => {
+const signinDAO = async userData => {
   const { email, password, username, address, phone_number, policy_agreed } =
-    req.body;
-
+    userData;
   await prisma.$queryRaw`
   INSERT INTO users 
   VALUES (default, ${email}, ${password}, ${username}, ${address}, ${phone_number}, ${policy_agreed});
   `;
 
   const [createdAccount] = await prisma.$queryRaw`
-  SELECT * 
+  SELECT id, email, username, address, phone_number, policy_agreed
   FROM users 
   ORDER BY id DESC 
   LIMIT 1;
@@ -19,11 +18,11 @@ const signinDAO = async req => {
   return createdAccount;
 };
 
-const loginDAO = async req => {
-  const { email } = req.body;
+const loginDAO = async userData => {
+  const { email } = userData.body;
 
   const loginData = await prisma.$queryRaw`
-  SELECT users.id, users.email, users.password, users.username
+  SELECT users.id, users.password
   FROM users
   WHERE users.email=${email};
   `;

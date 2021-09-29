@@ -1,50 +1,50 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider = "prisma-client-js"
+}
 
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model Categories {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar(100)
-
+  id       Int        @id @default(autoincrement())
+  name     String     @db.VarChar(100)
   Products Products[]
+
   @@map("categories")
 }
 
 model Products {
-  id          Int        @id @default(autoincrement())
-  koreanName  String     @map("korean_name") @db.VarChar(100)
-  englishName String     @map("english_name") @db.VarChar(100)
-  categoryId  Int        @map("category_id")
-  Categories  Categories @relation(fields: [categoryId], references: [id])
-
+  id                Int                 @id @default(autoincrement())
+  koreanName        String              @map("korean_name") @db.VarChar(100)
+  englishName       String              @map("english_name") @db.VarChar(100)
+  categoryId        Int                 @map("category_id")
+  createdAt         DateTime            @default(now()) @map("created_at")
+  Categories        Categories          @relation(fields: [categoryId], references: [id])
   Images            Images[]
-  ProductsAllergies ProductsAllergies[]
   Nutritions        Nutritions[]
+  ProductsAllergies ProductsAllergies[]
+
+  @@index([categoryId], map: "products_category_id_fkey")
   @@map("products")
 }
 
 model Images {
   id        Int      @id @default(autoincrement())
-  imageUrl  String   @map("image_url") @db.VarChar(500)
+  imageUrl  String   @map("image_url") @db.VarChar(2000)
   productId Int      @map("product_id")
   Products  Products @relation(fields: [productId], references: [id])
 
+  @@index([productId], map: "images_product_id_fkey")
   @@map("images")
 }
 
 model Allergies {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar(100)
-
+  id                Int                 @id @default(autoincrement())
+  name              String              @db.VarChar(100)
   ProductsAllergies ProductsAllergies[]
+
   @@map("allergies")
 }
 
@@ -52,30 +52,35 @@ model ProductsAllergies {
   id        Int       @id @default(autoincrement())
   productId Int       @map("product_id")
   allergyId Int       @map("allergy_id")
-  Products  Products  @relation(fields: [productId], references: [id])
   Allergies Allergies @relation(fields: [allergyId], references: [id])
+  Products  Products  @relation(fields: [productId], references: [id])
 
+  @@index([allergyId], map: "products_allergies_allergy_id_fkey")
+  @@index([productId], map: "products_allergies_product_id_fkey")
   @@map("products_allergies")
 }
 
 model Nutritions {
   id         Int      @id @default(autoincrement())
   name       String   @db.VarChar(100)
-  productsId Int      @map("product_id")
   amount     Float
+  productsId Int      @map("product_id")
   Products   Products @relation(fields: [productsId], references: [id])
 
+  @@index([productsId], map: "nutritions_product_id_fkey")
   @@map("nutritions")
 }
 
 model Users {
-  id           Int     @id @default(autoincrement())
-  email        String  @unique @db.VarChar(100)
-  password     String  @db.VarChar(100)
-  username     String? @db.VarChar(100)
-  address      String? @db.VarChar(100)
-  phoneNumber  String? @map("phone_number") @db.VarChar(100)
-  policyAgreed Boolean @default(true) @map("policy_agreed")
+  id           Int      @id @default(autoincrement())
+  email        String   @unique @db.VarChar(100)
+  password     String   @db.VarChar(100)
+  username     String?  @db.VarChar(100)
+  address      String?  @db.VarChar(100)
+  phoneNumber  String?  @map("phone_number") @db.VarChar(100)
+  policyAgreed Boolean  @default(true) @map("policy_agreed")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("users")
 }

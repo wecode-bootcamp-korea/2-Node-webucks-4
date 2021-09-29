@@ -1,8 +1,10 @@
 import express from 'express';
 import Router from './routes';
+import dotenv from 'dotenv';
 
 const app = express();
 
+dotenv.config();
 app.use(express.json()); // 순서 개중요!
 app.use(Router);
 
