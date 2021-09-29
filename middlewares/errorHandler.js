@@ -6,7 +6,9 @@ const errorLogger = (err, req, res, next) => {
 
 const errorResponder = (err, req, res, next) => {
   const { status, message } = err;
-  res.status(status).json({ message });
+  res
+    .status(status || 500)
+    .json({ message: message || "UNHANDELD_SERVER_ERROR" });
 };
 
 const invalidPathHandler = (req, res, next) => {

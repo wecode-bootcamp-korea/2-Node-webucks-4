@@ -1,3 +1,4 @@
+import { CommonError } from "../errors";
 import { UserService } from "../services";
 
 const getAllUsers = async (req, res, next) => {
@@ -12,8 +13,11 @@ const getAllUsers = async (req, res, next) => {
 const registerUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const message = await UserService.registerUser(email, password);
-    res.status(201).json({ message: message });
+    if (!email || !password) {
+      throw new CommonError.RequestKeyError();
+    }
+    await UserService.registerUser(email, password);
+    res.status(201).json({ message: "USER_REGISTER_SUCCESS" });
   } catch (err) {
     next(err);
   }
@@ -22,8 +26,11 @@ const registerUser = async (req, res, next) => {
 const verifyLoginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    if (!email || !password) {
+      throw new CommonError.RequestKeyError();
+    }
     const token = await UserService.verifyLoginUser(email, password);
-    res.status(200).json({ message: "USER_LOGIN_SUCCESS", token: token });
+    res.status(200).json({ message: "USER_LOGIN_SUCCESS", token });
   } catch (err) {
     next(err);
   }

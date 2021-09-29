@@ -2,6 +2,7 @@
 class RegisterFailed extends Error {
   constructor() {
     super();
+    this.status = 500;
     this.message = "USER_REGISTER_FAILED";
 
     if (this instanceof EmailDuplicateError) {
@@ -9,7 +10,6 @@ class RegisterFailed extends Error {
       this.content = "inputted email already exist";
     }
     if (this instanceof BcryptHashError) {
-      this.status = 500;
       this.content = "failed to hash password";
     }
   }

@@ -16,6 +16,7 @@ model Category {
   category  String    @map("name")
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+  isDeleted Boolean   @default(false) @map("is_deleted")
   Product   Product[]
 
   @@map("categories")
@@ -30,11 +31,14 @@ model Product {
   categoryId     Int              @map("category_id")
   createdAt      DateTime         @default(now()) @map("created_at")
   updatedAt      DateTime         @default(now()) @updatedAt @map("updated_at")
+  isDeleted      Boolean          @default(false) @map("is_deleted")
   Category       Category         @relation(fields: [categoryId], references: [id])
   ProductImage   ProductImage[]
   ProductAllergy ProductAllergy[]
   Nutrition      Nutrition[]
 
+  ProductLike    ProductLike[]
+  ProductComment ProductComment[]
   @@map("products")
 }
 
@@ -44,6 +48,7 @@ model ProductImage {
   productId Int      @map("product_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  isDeleted Boolean  @default(false) @map("is_deleted")
   Product   Product  @relation(fields: [productId], references: [id])
 
   @@map("product_images")
@@ -54,6 +59,7 @@ model Allergy {
   name           String           @unique
   createdAt      DateTime         @default(now()) @map("created_at")
   updatedAt      DateTime         @default(now()) @updatedAt @map("updated_at")
+  isDeleted      Boolean          @default(false) @map("is_deleted")
   ProductAllergy ProductAllergy[]
 
   @@map("allergies")
@@ -66,7 +72,7 @@ model ProductAllergy {
   Product   Product @relation(fields: [productId], references: [id])
   Allergy   Allergy @relation(fields: [allergyId], references: [id])
 
-  @@map("products_allergies")
+  @@map("product_allergies")
 }
 
 model Nutrition {
@@ -80,6 +86,7 @@ model Nutrition {
   caffeine  Float
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  isDeleted Boolean  @default(false) @map("is_deleted")
   Product   Product  @relation(fields: [productId], references: [id])
 
   @@map("nutritions")
@@ -95,6 +102,37 @@ model User {
   policyAgreed Boolean  @default(true) @map("policy_agreed")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+  isDeleted    Boolean  @default(false) @map("is_deleted")
 
+  ProductLike    ProductLike[]
+  ProductComment ProductComment[]
   @@map("users")
+}
+
+model ProductLike {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  productId Int      @map("product_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  isDeleted Boolean  @default(false) @map("is_deleted")
+  User      User     @relation(fields: [userId], references: [id])
+  Product   Product  @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId], name: "ProductLike_userId_productId_unique_constraint")
+  @@map("product_likes")
+}
+
+model ProductComment {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  productId Int      @map("product_id")
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  isDeleted Boolean  @default(false) @map("is_deleted")
+  User      User     @relation(fields: [userId], references: [id])
+  Product   Product  @relation(fields: [productId], references: [id])
+
+  @@map("product_comments")
 }

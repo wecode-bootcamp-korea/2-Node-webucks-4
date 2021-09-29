@@ -3,8 +3,8 @@ import { ListDAO } from "../models";
 
 const getAllCategories = async () => {
   const categories = await ListDAO.getAllCategories();
-  if (categories == null) {
-    throw new CommonError.ItemNotFoundError();
+  if (categories.length === 0) {
+    throw new CommonError.NotFoundError();
   }
   return categories;
 };

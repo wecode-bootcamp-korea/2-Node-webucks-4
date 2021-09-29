@@ -1,4 +1,4 @@
-import { prisma } from "../prisma";
+import { prisma, Prisma } from "../prisma";
 
 const getAllProducts = async () => {
   // return await prisma.$queryRaw`SELECT p.id, p.korean_name, p.english_name, c.name, p.category_id, i.image_url
@@ -106,4 +106,66 @@ const getProduct = async (productId) => {
   }
 };
 
-export { getAllProducts, getProduct };
+const getProductLikeData = async (userId, productId) => {
+  const [data] = await prisma.$queryRaw`
+    SELECT is_deleted FROM product_likes 
+      WHERE 
+      user_id = ${userId} 
+      AND 
+      product_id = ${productId};`;
+  return data;
+};
+
+const createProductLike = async (userId, productId) => {
+  try {
+    return await prisma.$executeRaw`
+      INSERT INTO product_likes (
+        user_id, 
+        product_id
+      ) VALUES (
+        ${userId}, 
+        ${productId}
+      );`;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const updateProductLike = async (userId, productId) => {
+  try {
+    return await prisma.$executeRaw`
+      UPDATE product_likes 
+        SET 
+        is_deleted=0 
+        WHERE 
+        user_id = ${userId} 
+        AND 
+        product_id = ${productId};`;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const deleteProductLike = async (userId, productId) => {
+  try {
+    return await prisma.$executeRaw`
+      UPDATE product_likes 
+        SET 
+        is_deleted=1 
+        WHERE 
+        user_id = ${userId} 
+        AND 
+        product_id = ${productId};`;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export {
+  getAllProducts,
+  getProduct,
+  getProductLikeData,
+  createProductLike,
+  updateProductLike,
+  deleteProductLike,
+};

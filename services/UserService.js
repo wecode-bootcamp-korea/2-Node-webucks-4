@@ -1,24 +1,27 @@
 import { UserDAO } from "../models";
-import { UserError } from "../errors";
-import { authUtils, bcryptUtils } from "../utils";
+import { CommonError, UserError } from "../errors";
+import { authUtils, bcryptUtils, wrapperUtils } from "../utils";
 
 const getAllUsers = async () => {
-  return await UserDAO.getAllUsers();
+  const userInfos = await UserDAO.getAllUsers();
+  if (userInfos.length === 0) {
+    throw new CommonError.NotFoundError();
+  }
+  return userInfos;
 };
 
 const registerUser = async (email, password) => {
   const hashedPassword = await bcryptUtils.hashPassword(password);
-  const isRegistered =
-    (await UserDAO.registerUser(email, hashedPassword)) === 1;
-  if (!isRegistered) {
-    throw new UserError.EmailDuplicateError();
-  }
-  return "USER_REGISTER_SUCESS";
+  wrapperUtils.recordWrapper(
+    await UserDAO.registerUser(email, hashedPassword),
+    new UserError.EmailDuplicateError(),
+    1
+  );
 };
 
 const verifyLoginUser = async (email, password) => {
-  const storedUserInfo = await getUserInfo(email);
-  if (storedUserInfo == null) {
+  const storedUserInfo = await getUserInfoByEmail(email);
+  if (!storedUserInfo) {
     throw new UserError.NonExistentEmailError();
   }
   const storedPassword = storedUserInfo.password;
@@ -29,8 +32,20 @@ const verifyLoginUser = async (email, password) => {
   return authUtils.makeToken(userId);
 };
 
-const getUserInfo = async (email) => {
-  return await UserDAO.getUserInfo(email);
+const getUserInfoByEmail = async (email) => {
+  const foundUserInfo = await UserDAO.getUserInfoByEmail(email);
+  if (!foundUserInfo) {
+    throw new CommonError.NotFoundError();
+  }
+  return foundUserInfo;
 };
 
-export { getAllUsers, registerUser, verifyLoginUser };
+const getUserInfoById = async (id) => {
+  const foundUserInfo = await UserDAO.getUserInfoById(id);
+  if (!foundUserInfo) {
+    throw new CommonError.NotFoundError();
+  }
+  return foundUserInfo;
+};
+
+export { getAllUsers, registerUser, verifyLoginUser, getUserInfoById };
