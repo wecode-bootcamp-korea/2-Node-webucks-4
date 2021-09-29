@@ -49,7 +49,10 @@ const flagProductLike = async (userId, productId) => {
 };
 
 const getProductLikeData = async (userId, productId) => {
-  return await ProductDAO.getProductLikeData(userId, productId);
+  const likeData = await ProductDAO.getProductLikeData(userId, productId);
+  if (!likeData) {
+    throw new ProductError.InvalidProductError();
+  }
 };
 
 export { getAllProducts, getProduct, flagProductLike };
