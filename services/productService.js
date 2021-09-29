@@ -2,32 +2,36 @@ import dao from '../models';
 
 const { productDao } = dao;
 
-const newProductList = async products => {
-  let categoryList = [];
-  products.forEach(el => {
-    if (categoryList.indexOf(el.category) === -1)
-      categoryList.push(el.category);
-  });
-  const list = categoryList.map((category, id) => {
-    const product = products.filter(el => el.category == category);
-    let totalList = {
-      id: id + 1,
-      category,
-      count: product.length,
-      product,
-    };
-    return totalList;
-  });
-  return list;
+const findAllProducts = async () => {
+  const products = productDao.findAllProducts();
+  if (!products.length) {
+    const err = new Error('DRINKS_NOT_FOUND');
+    err.statusCode = 404;
+    throw err;
+  }
+  return products;
 };
 
-const findAllProducts = async () => {
-  const products = await productDao.findAllProducts();
-  return await newProductList(products);
+const assignObj = async (product, nutrition) => {
+  try {
+    const nutritionGroup = { nutrition: nutrition };
+    const productObj = [Object.assign(product, nutritionGroup)];
+    return productObj;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 };
 
 const findProduct = async id => {
-  return await productDao.findProduct(id);
+  const [product] = await productDao.findProduct(id);
+  const [nutrition] = await productDao.findNutrition(id);
+  if (!product || !nutrition) {
+    const err = new Error('DRINKS_NOT_FOUND');
+    err.statusCode = 404;
+    throw err;
+  }
+  return await assignObj(product, nutrition);
 };
 
 export default { findProduct, findAllProducts };

@@ -8,8 +8,9 @@ const encryptionPassword = async password => {
   try {
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(password, salt);
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
 };
 
@@ -22,7 +23,7 @@ const checkEmail = async (email, userpassword) => {
     .then(res => {
       return res;
     })
-    .catch(err => console.log(err));
+    .catch(err => console.error(err));
   if (ok) return jwt.sign({ id }, 'zibu', { expiresIn: '3h' });
   else return '';
 };
