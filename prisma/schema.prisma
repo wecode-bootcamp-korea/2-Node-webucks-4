@@ -21,6 +21,7 @@ model Product {
   koreanName  String           @map("korean_name")
   englishName String           @map("english_name")
   description String
+  isNew       Boolean          @default(false) @map("is_new")
   category    Category         @relation(fields: [categoryId], references: [id])
   image       Image[]
   allergy     ProductAllergy[]
