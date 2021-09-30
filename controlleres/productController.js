@@ -15,6 +15,8 @@ const findProduct = async (req, res, next) => {
     const product = await productService.findProduct(id);
     resMessage(201, res, 'CREATED', product);
   } catch (err) {
+    const { statusCode, message } = err;
+    resMessage(statusCode, res, message);
     next(err);
   }
 };
@@ -24,6 +26,8 @@ const findAllProducts = async (req, res, next) => {
     const product = await productService.findAllProducts();
     resMessage(201, res, 'CREATED', product);
   } catch (err) {
+    const { statusCode, message } = err;
+    resMessage(statusCode, res, message);
     next(err);
   }
 };

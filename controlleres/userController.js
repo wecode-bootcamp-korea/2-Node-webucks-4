@@ -16,6 +16,9 @@ const createUser = async (req, res, next) => {
     if (user) resMessage(201, res, 'CREATED', user);
     else resMessage(401, res, 'PERMISSION_DENIED', user);
   } catch (err) {
+    const { statusCode, message } = err;
+    resMessage(statusCode, res, message);
+    next(err);
     next(err);
   }
 };
@@ -27,6 +30,9 @@ const checkEmail = async (req, res, next) => {
     if (user) resMessage(201, res, 'CREATED', user);
     else resMessage(401, res, 'PERMISSION_DENIED');
   } catch (err) {
+    const { statusCode, message } = err;
+    resMessage(statusCode, res, message);
+    next(err);
     next(err);
   }
 };

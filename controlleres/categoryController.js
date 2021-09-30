@@ -14,6 +14,8 @@ const findAllCategories = async (req, res, next) => {
     const category = await categoryService.findAllCategories();
     resMessage(201, res, 'CREATED', category);
   } catch (err) {
+    const { statusCode, message } = err;
+    resMessage(statusCode, res, message);
     next(err);
   }
 };
