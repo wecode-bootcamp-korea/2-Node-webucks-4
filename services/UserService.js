@@ -12,7 +12,7 @@ const getAllUsers = async () => {
 
 const registerUser = async (email, password) => {
   const hashedPassword = await bcryptUtils.hashPassword(password);
-  wrapperUtils.recordWrapper(
+  wrapperUtils.dataRecordWrapper(
     await UserDAO.registerUser(email, hashedPassword),
     new UserError.EmailDuplicateError(),
     1

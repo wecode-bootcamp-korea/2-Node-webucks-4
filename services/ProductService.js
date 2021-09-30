@@ -23,21 +23,21 @@ const flagProductLike = async (userId, productId) => {
   const { is_deleted: flag } = likeData == null ? { is_deleted: 2 } : likeData;
   switch (flag) {
     case 2:
-      wrapperUtils.recordWrapper(
+      wrapperUtils.dataRecordWrapper(
         await ProductDAO.createProductLike(userId, productId),
         new ProductError.LikeFlagError(),
         1
       );
       break;
     case 1:
-      wrapperUtils.recordWrapper(
+      wrapperUtils.dataRecordWrapper(
         await ProductDAO.updateProductLike(userId, productId),
         new ProductError.LikeFlagError(),
         1
       );
       break;
     case 0:
-      wrapperUtils.recordWrapper(
+      wrapperUtils.dataRecordWrapper(
         await ProductDAO.deleteProductLike(userId, productId),
         new ProductError.LikeFlagError(),
         1
