@@ -1,5 +1,5 @@
 import productController from './productController';
-// import detailController from './detailController';
+// import categoryController from './categoryController';
 import loginController from './loginController';
 
 export { loginController, productController };

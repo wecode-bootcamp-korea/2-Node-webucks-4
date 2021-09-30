@@ -1,11 +1,11 @@
 import express from 'express';
 const router = express.Router();
 
-// import DetailRouter from './DetailRouter';
+// import categoryRouter from './categoryRouter';
 import productRouter from './productRouter';
 import loginRouter from './loginRouter';
 
-// router.use('/category', DetailRouter);
+// router.use('/category', categoryRouter);
 router.use('/product', productRouter);
 router.use('/user', loginRouter);
 

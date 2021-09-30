@@ -1,8 +1,15 @@
 import { loginDao } from '../models';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
-const register = async (email, password, username, address, phoneNumber) => {
-  console.log('here is service');
+const register = async (
+  email,
+  password,
+  username,
+  address,
+  phoneNumber,
+  policyAgreed
+) => {
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
   return await loginDao.register(
@@ -10,7 +17,8 @@ const register = async (email, password, username, address, phoneNumber) => {
     hashedPassword,
     username,
     address,
-    phoneNumber
+    phoneNumber,
+    policyAgreed
   );
 };
 
@@ -19,7 +27,12 @@ const validUser = async (email, password) => {
     const [existingUser] = await loginDao.validUser(email);
     const isValidUser = await bcrypt.compare(password, existingUser.password);
     if (isValidUser) {
-      return { message: `반갑습니다 ${existingUser.username}님` };
+      const token = jwt.sign(
+        { id: existingUser.id },
+        'server_made_secret_key',
+        { expiresIn: '1h' }
+      );
+      return { message: `반갑습니다 ${existingUser.username}님`, token };
     } else {
       return { message: `비밀번호가 맞지 않습니다` };
     }

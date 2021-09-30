@@ -2,8 +2,16 @@ import { loginService } from '../services';
 
 const register = async (req, res) => {
   console.log('here is controller');
-  const { email, password, username, address, phoneNumber } = req.body;
-  await loginService.register(email, password, username, address, phoneNumber);
+  const { email, password, username, address, phoneNumber, policyAgreed } =
+    req.body;
+  await loginService.register(
+    email,
+    password,
+    username,
+    address,
+    phoneNumber,
+    policyAgreed
+  );
   const message = 'success';
   return res.json({ message });
 };

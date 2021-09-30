@@ -1,5 +1,5 @@
 import productService from './productService';
-// import detailService from './detailService';
+// import categoryService from './categoryService';
 import loginService from './loginService';
 
 export { productService, loginService };

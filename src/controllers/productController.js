@@ -1,11 +1,10 @@
 import { productService } from '../services';
 
-const getProducts = async (req, res) => {
-  console.log('here is controller');
-  const products = await productService.getProducts();
+const getAllProducts = async (req, res) => {
+  const products = await productService.getAllProducts();
   res.status(200).json({
     myProducts: products,
   });
 };
 
-module.exports = { getProducts };
+export default { getAllProducts };

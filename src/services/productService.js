@@ -1,9 +1,7 @@
 import { productDao } from '../models';
 
-const getProducts = async () => {
-  return await productDao.getProducts();
+const getAllProducts = async () => {
+  return await productDao.getAllProducts();
 };
 
-module.exports = { getProducts };
-
-// 비밀번호 암호화,
+export default { getAllProducts };

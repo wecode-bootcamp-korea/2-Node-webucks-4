@@ -1,5 +1,5 @@
 import productDao from './productDao';
-// import detailDao from './detailDao';
+// import categoryDao from './categoryDao';
 import loginDao from './loginDao';
 
 export { productDao, loginDao };
