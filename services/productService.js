@@ -17,7 +17,6 @@ const GroupingCategory = async (products, categories) => {
     });
     return newList;
   } catch (err) {
-    console.error(err);
     throw err;
   }
 };
@@ -39,7 +38,6 @@ const assignObj = async (product, nutrition) => {
     const productObj = [Object.assign(product, nutritionGroup)];
     return productObj;
   } catch (err) {
-    console.error(err);
     throw err;
   }
 };

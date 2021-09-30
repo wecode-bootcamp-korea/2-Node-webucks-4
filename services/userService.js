@@ -9,7 +9,6 @@ const encryptionPassword = async password => {
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(password, salt);
   } catch (err) {
-    console.error(err);
     throw err;
   }
 };

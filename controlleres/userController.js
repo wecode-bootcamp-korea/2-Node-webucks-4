@@ -19,7 +19,6 @@ const createUser = async (req, res, next) => {
     const { statusCode, message } = err;
     resMessage(statusCode, res, message);
     next(err);
-    next(err);
   }
 };
 
@@ -32,7 +31,6 @@ const checkEmail = async (req, res, next) => {
   } catch (err) {
     const { statusCode, message } = err;
     resMessage(statusCode, res, message);
-    next(err);
     next(err);
   }
 };
